@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<title>Simulateur ROI IA — Embed Neuroleads</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<style>
+  html, body { margin: 0; padding: 0; background: #0A0E27; }
+  .embed-wrapper { max-width: 1200px; margin: 0 auto; padding: 20px; }
+  iframe {
+    width: 100%;
+    border: none;
+    border-radius: 16px;
+    display: block;
+    min-height: 800px;
+    background: #0A0E27;
+  }
+</style>
+</head>
+<body>
+<div class="embed-wrapper">
+  <!--
+    ================================================================
+    NEUROLEADS — EMBED DU SIMULATEUR ROI IA
+    ----------------------------------------------------------------
+    Copiez-collez ce code dans n'importe quelle page de neuroleads.fr.
+    Le simulateur s'adapte automatiquement en hauteur via postMessage.
+    ================================================================
+  -->
+  <iframe
+    id="neuroleads-simulator"
+    src="https://www.neuroleads.fr/simulateur-roi/"
+    title="Simulateur ROI IA Neuroleads"
+    loading="lazy"
+    allow="clipboard-write"
+    scrolling="no"
+  ></iframe>
+</div>
+
+<script>
+  // Auto-resize de l'iframe en fonction du contenu du simulateur
+  window.addEventListener('message', function (event) {
+    if (!event.data || event.data.type !== 'neuroleads-simulator-height') return;
+    var iframe = document.getElementById('neuroleads-simulator');
+    if (iframe && typeof event.data.height === 'number') {
+      iframe.style.height = event.data.height + 'px';
+    }
+  });
+</script>
+</body>
+</html>

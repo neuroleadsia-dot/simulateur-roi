@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="Simulateur ROI IA — Estimez en 2 minutes les gains de temps et financiers générés par le déploiement de l'IA dans vos départements." />
+<meta name="keywords" content="simulateur ROI IA, calcul ROI intelligence artificielle, cas d'usage IA, automatisation, agents IA" />
+<meta property="og:title" content="Simulateur ROI IA — Neuroleads" />
+<meta property="og:description" content="Calculez votre ROI IA en 2 minutes. 46 cas d'usage, 10 départements, chiffrage instantané." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://www.neuroleads.fr/simulateur-roi" />
+<title>Simulateur ROI IA — Neuroleads</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Fraunces:ital,wght@1,400;1,600&display=swap" rel="stylesheet" />
+
+<!-- Tailwind CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          bg:     { DEFAULT:'#0A0E27', elevated:'#111533', card:'#151A3D', hover:'#1A2048' },
+          border: { DEFAULT:'#1E2450', subtle:'#252B5C' },
+          accent: { DEFAULT:'#6366F1', hover:'#818CF8', glow:'rgba(99,102,241,0.15)' },
+          mint:   { DEFAULT:'#14B8A6', soft:'rgba(20,184,166,0.1)' },
+          gold:   '#F59E0B'
+        },
+        fontFamily: {
+          sans:    ['Inter','system-ui','sans-serif'],
+          display: ['Space Grotesk','sans-serif'],
+          serif:   ['Fraunces','serif']
+        }
+      }
+    }
+  };
+</script>
+
+<style>
+  html { scroll-behavior: smooth; }
+  body {
+    background: #0A0E27;
+    color: #F8FAFC;
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  ::-webkit-scrollbar { width: 10px; }
+  ::-webkit-scrollbar-track { background: #0A0E27; }
+  ::-webkit-scrollbar-thumb { background: #252B5C; border-radius: 10px; }
+  ::-webkit-scrollbar-thumb:hover { background: #6366F1; }
+
+  .gradient-text {
+    background: linear-gradient(135deg, #F8FAFC 0%, #C7D2FE 50%, #818CF8 100%);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .gradient-text-accent {
+    background: linear-gradient(135deg, #818CF8 0%, #14B8A6 100%);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .card-premium {
+    background: linear-gradient(180deg, rgba(21,26,61,0.8) 0%, rgba(17,21,51,0.4) 100%);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.06);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .card-premium:hover {
+    border-color: rgba(99,102,241,0.3);
+    transform: translateY(-4px);
+    background: linear-gradient(180deg, rgba(26,32,72,0.9) 0%, rgba(21,26,61,0.6) 100%);
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #6366F1 0%, #818CF8 100%);
+    position: relative; overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .btn-primary::before {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(135deg, #818CF8 0%, #A5B4FC 100%);
+    opacity: 0; transition: opacity 0.3s;
+  }
+  .btn-primary:hover::before { opacity: 1; }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 20px 40px -15px rgba(99,102,241,0.5);
+  }
+  .btn-primary > * { position: relative; z-index: 1; }
+
+  .divider-glow {
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, rgba(99,102,241,0.5) 50%, transparent 100%);
+  }
+
+  .dept-card.active {
+    background: linear-gradient(135deg, rgba(99,102,241,0.15) 0%, rgba(20,184,166,0.05) 100%);
+    border-color: #6366F1 !important;
+  }
+  .dept-card.active .dept-icon {
+    background: linear-gradient(135deg, #6366F1, #818CF8);
+    color: white;
+  }
+
+  .usecase-item { transition: all 0.3s ease; cursor: pointer; }
+  .usecase-item:hover { background: rgba(99,102,241,0.08); border-color: #6366F1; }
+  .usecase-item.selected { background: rgba(99,102,241,0.15); border-color: #6366F1; }
+
+  input[type="range"] {
+    -webkit-appearance: none; width: 100%; height: 6px;
+    border-radius: 3px; background: #1E2450; outline: none;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none;
+    width: 20px; height: 20px; border-radius: 50%;
+    background: linear-gradient(135deg, #6366F1, #818CF8);
+    cursor: pointer; box-shadow: 0 0 20px rgba(99,102,241,0.6);
+    transition: transform 0.2s;
+  }
+  input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+  input[type="range"]::-moz-range-thumb {
+    width: 20px; height: 20px; border-radius: 50%;
+    background: linear-gradient(135deg, #6366F1, #818CF8);
+    cursor: pointer; border: none;
+  }
+
+  .reveal { opacity: 0; transform: translateY(20px); transition: all 0.7s cubic-bezier(0.16,1,0.3,1); }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body class="antialiased">
+
+<!-- Background glow orbs -->
+<div class="fixed top-0 right-0 w-[500px] h-[500px] rounded-full opacity-30 pointer-events-none" style="background: radial-gradient(circle, #6366F1 0%, transparent 70%); filter: blur(100px);"></div>
+<div class="fixed bottom-0 left-0 w-[400px] h-[400px] rounded-full opacity-20 pointer-events-none" style="background: radial-gradient(circle, #14B8A6 0%, transparent 70%); filter: blur(100px);"></div>
+
+<!-- Header minimal -->
+<header class="relative z-10 border-b border-border-subtle/50">
+  <div class="max-w-7xl mx-auto px-6 lg:px-8 py-5 flex items-center justify-between">
+    <a href="https://www.neuroleads.fr" class="flex items-center gap-3">
+      <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-accent to-accent-hover flex items-center justify-center font-display font-bold text-white text-sm">N</div>
+      <span class="font-display font-semibold text-lg tracking-tight">Neuroleads</span>
+    </a>
+    <a href="https://www.neuroleads.fr/#contact" class="btn-primary inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium text-white">
+      <span>Réserver un diagnostic</span>
+    </a>
+  </div>
+</header>
+
+<main class="relative z-10 py-16 lg:py-24">
+  <div class="max-w-7xl mx-auto px-6 lg:px-8">
+
+    <!-- Intro -->
+    <div class="text-center max-w-3xl mx-auto mb-14">
+      <p class="reveal text-sm uppercase tracking-widest text-mint font-medium mb-4">Simulateur interactif</p>
+      <h1 class="reveal font-display text-4xl md:text-5xl lg:text-6xl font-bold leading-tight tracking-tight mb-6">
+        <span class="gradient-text">Calculez votre</span> <span class="font-serif italic gradient-text-accent">ROI IA</span><br/>
+        <span class="gradient-text">en 2 minutes</span>
+      </h1>
+      <p class="reveal text-lg text-slate-400 leading-relaxed">
+        Sélectionnez votre département, vos cas d'usage et vos paramètres. Nous estimons les gains de temps et financiers générés par le déploiement de l'IA.
+      </p>
+    </div>
+
+    <!-- Simulator card -->
+    <div class="reveal card-premium rounded-3xl p-6 md:p-10 lg:p-12 max-w-6xl mx-auto">
+
+      <!-- Step 1: Department -->
+      <div class="mb-10">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="w-8 h-8 rounded-full bg-accent text-white font-display font-bold flex items-center justify-center text-sm">1</div>
+          <h2 class="font-display text-xl font-semibold text-white">Quel département souhaitez-vous analyser ?</h2>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4" id="departments">
+
+          <button class="dept-card card-premium rounded-2xl p-5 text-left border border-border-subtle" data-dept="transverse">
+            <div class="dept-icon w-11 h-11 rounded-xl bg-bg-card border border-border flex items-center justify-center mb-3 transition-all">
+              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h7"/></svg>
+            </div>
+            <div class="font-display font-semibold text-white text-sm mb-0.5">Transverse</div>
+            <div class="text-xs text-slate-500">Tous métiers, productivité</div>
+          </button>
+
+          <button class="dept-card card-premium rounded-2xl p-5 text-left border border-border-subtle" data-dept="commercial">
+            <div class="dept-icon w-11 h-11 rounded-xl bg-bg-card border border-border flex items-center justify-center mb-3 transition-all">
+              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+            </div>
+            <div class="font-display font-semibold text-white text-sm mb-0.5">Commercial</div>
+            <div class="text-xs text-slate-500">Leads, ventes, propositions</div>
+          </button>
+
+          <button class="dept-card card-premium rounded-2xl p-5 text-left border border-border-subtle" data-dept="marketing">
+            <div class="dept-icon w-11 h-11 rounded-xl bg-bg-card border border-border flex items-center justify-center mb-3 transition-all">
+              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"/></svg>
+            </div>
+            <div class="font-display font-semibold text-white text-sm mb-0.5">Marketing</div>
+            <div class="text-xs text-slate-500">Contenus, campagnes, SEO</div>
+          </button>
+
+          <button class="dept-card card-premium rounded-2xl p-5 text-left border border-border-subtle" data-dept="finance">
+            <div class="dept-icon w-11 h-11 rounded-xl bg-bg-card border border-border flex items-center justify-center mb-3 transition-all">
+              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+            <div class="font-display font-semibold text-white text-sm mb-0.5">Finance</div>
+            <div class="text-xs text-slate-500">Comptabilité, reporting</div>
+          </button>
+
+          <button class="dept-card card-premium rounded-2xl p-5 text-left border border-border-subtle" data-dept="rh">
+            <div class="dept-icon w-11 h-11 rounded-xl bg-bg-card border border-border flex items-center justify-center mb-3 transition-all">
+              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+            </div>
+            <div class="font-display font-semibold text-white text-sm mb-0.5">Ressources Humaines</div>
+            <div class="text-xs text-slate-500">Recrutement, onboarding</div>
+          </button>
+
+          <button class="dept-card card-premium rounded-2xl p-5 text-left border border-border-subtle" data-dept="juridique">
+            <div class="dept-icon w-11 h-11 rounded-xl bg-bg-card border border-border flex items-center justify-center mb-3 transition-all">
+              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"/></svg>
+            </div>
+            <div class="font-display font-semibold text-white text-sm mb-0.5">Juridique</div>
+            <div class="text-xs text-slate-500">Contrats, conformité</div>
+          </button>
+
+          <button class="dept-card card-premium rounded-2xl p-5 text-left border border-border-subtle" data-dept="supply">
+            <div class="dept-icon w-11 h-11 rounded-xl bg-bg-card border border-border flex items-center justify-center mb-3 transition-all">
+              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1"/></svg>
+            </div>
+            <div class="font-display font-semibold text-white text-sm mb-0.5">Supply Chain</div>
+            <div class="text-xs text-slate-500">Achats, logistique</div>
+          </button>
+
+          <button class="dept-card card-premium rounded-2xl p-5 text-left border border-border-subtle" data-dept="it">
+            <div class="dept-icon w-11 h-11 rounded-xl bg-bg-card border border-border flex items-center justify-center mb-3 transition-all">
+              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+            </div>
+            <div class="font-display font-semibold text-white text-sm mb-0.5">IT / DSI</div>
+            <div class="text-xs text-slate-500">Dev, sécurité, support</div>
+          </button>
+
+          <button class="dept-card card-premium rounded-2xl p-5 text-left border border-border-subtle" data-dept="service">
+            <div class="dept-icon w-11 h-11 rounded-xl bg-bg-card border border-border flex items-center justify-center mb-3 transition-all">
+              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+            </div>
+            <div class="font-display font-semibold text-white text-sm mb-0.5">Service Client</div>
+            <div class="text-xs text-slate-500">Support, tickets, chatbot</div>
+          </button>
+
+          <button class="dept-card card-premium rounded-2xl p-5 text-left border border-border-subtle" data-dept="production">
+            <div class="dept-icon w-11 h-11 rounded-xl bg-bg-card border border-border flex items-center justify-center mb-3 transition-all">
+              <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+            </div>
+            <div class="font-display font-semibold text-white text-sm mb-0.5">Production / Ops</div>
+            <div class="text-xs text-slate-500">Qualité, maintenance</div>
+          </button>
+        </div>
+      </div>
+
+      <!-- Step 2: Use cases -->
+      <div id="usecasesSection" class="mb-10 hidden">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="w-8 h-8 rounded-full bg-accent text-white font-display font-bold flex items-center justify-center text-sm">2</div>
+          <h2 class="font-display text-xl font-semibold text-white">Quels cas d'usage souhaitez-vous déployer ?</h2>
+        </div>
+        <p class="text-sm text-slate-500 mb-6">Sélectionnez un ou plusieurs cas d'usage. Les calculs se mettront à jour en temps réel.</p>
+        <div id="usecasesList" class="grid md:grid-cols-2 gap-3"></div>
+      </div>
+
+      <!-- Step 3: Params -->
+      <div id="paramsSection" class="mb-10 hidden">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="w-8 h-8 rounded-full bg-accent text-white font-display font-bold flex items-center justify-center text-sm">3</div>
+          <h2 class="font-display text-xl font-semibold text-white">Paramètres de votre équipe</h2>
+        </div>
+        <div class="grid md:grid-cols-2 gap-6">
+          <div>
+            <label class="flex items-center justify-between text-sm text-slate-300 mb-3">
+              <span>Nombre de collaborateurs concernés</span>
+              <span class="font-display font-semibold text-accent-hover"><span id="peopleValue">10</span> personnes</span>
+            </label>
+            <input type="range" id="peopleRange" min="1" max="500" value="10" step="1" />
+            <div class="flex justify-between text-xs text-slate-600 mt-2"><span>1</span><span>100</span><span>500+</span></div>
+          </div>
+          <div>
+            <label class="flex items-center justify-between text-sm text-slate-300 mb-3">
+              <span>Coût horaire moyen chargé (€)</span>
+              <span class="font-display font-semibold text-accent-hover"><span id="rateValue">45</span> €/h</span>
+            </label>
+            <input type="range" id="rateRange" min="20" max="150" value="45" step="5" />
+            <div class="flex justify-between text-xs text-slate-600 mt-2"><span>20€</span><span>75€</span><span>150€</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Results -->
+      <div id="resultsSection" class="hidden">
+        <div class="divider-glow mb-10"></div>
+        <div class="flex items-center gap-3 mb-8">
+          <div class="w-8 h-8 rounded-full bg-mint text-bg font-display font-bold flex items-center justify-center text-sm">✓</div>
+          <h2 class="font-display text-xl font-semibold text-white">Votre ROI estimé</h2>
+        </div>
+
+        <div class="grid lg:grid-cols-3 gap-6 mb-8">
+          <div class="card-premium rounded-2xl p-6 relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-24 h-24 rounded-full opacity-20" style="background: radial-gradient(circle, #6366F1 0%, transparent 70%); filter: blur(30px);"></div>
+            <div class="relative">
+              <div class="text-xs uppercase tracking-widest text-slate-500 mb-3">Temps économisé</div>
+              <div class="font-display text-5xl font-bold text-white mb-2" id="hoursResult">0</div>
+              <div class="text-sm text-accent-hover font-medium">heures / an</div>
+              <div class="text-xs text-slate-500 mt-3" id="hoursDetail">— / semaine pour l'équipe</div>
+            </div>
+          </div>
+
+          <div class="card-premium rounded-2xl p-6 relative overflow-hidden" style="background: linear-gradient(180deg, rgba(99,102,241,0.15) 0%, rgba(21,26,61,0.4) 100%); border-color: rgba(99,102,241,0.3);">
+            <div class="absolute top-0 right-0 w-32 h-32 rounded-full opacity-30" style="background: radial-gradient(circle, #6366F1 0%, transparent 70%); filter: blur(40px);"></div>
+            <div class="relative">
+              <div class="text-xs uppercase tracking-widest text-accent-hover mb-3">Gain financier estimé</div>
+              <div class="font-display text-5xl font-bold gradient-text-accent mb-2" id="moneyResult">0 €</div>
+              <div class="text-sm text-mint font-medium">par an</div>
+              <div class="text-xs text-slate-400 mt-3" id="moneyDetail">Soit — € par mois</div>
+            </div>
+          </div>
+
+          <div class="card-premium rounded-2xl p-6 relative overflow-hidden">
+            <div class="text-xs uppercase tracking-widest text-slate-500 mb-3">Complexité de mise en œuvre</div>
+            <div class="font-display text-3xl font-bold text-white mb-4" id="complexityResult">—</div>
+            <div class="flex gap-1 mb-3" id="complexityBars">
+              <div class="h-2 flex-1 rounded-full bg-bg-card"></div>
+              <div class="h-2 flex-1 rounded-full bg-bg-card"></div>
+              <div class="h-2 flex-1 rounded-full bg-bg-card"></div>
+            </div>
+            <div class="text-xs text-slate-500" id="complexityDetail">Durée estimée : —</div>
+          </div>
+        </div>
+
+        <div class="card-premium rounded-2xl p-6 md:p-8 mb-8">
+          <div class="flex items-center justify-between mb-6">
+            <div>
+              <div class="font-display font-semibold text-white">Projection sur 3 ans</div>
+              <div class="text-xs text-slate-500">Gains cumulés après déploiement</div>
+            </div>
+          </div>
+          <div class="relative h-64"><canvas id="roiChart"></canvas></div>
+        </div>
+
+        <div class="bg-accent/5 border border-accent/20 rounded-2xl p-6 md:p-8 text-center">
+          <p class="text-sm text-slate-400 italic mb-6 max-w-2xl mx-auto">
+            Cette estimation est basée sur des moyennes sectorielles. Un diagnostic personnalisé Neuroleads affinera ces chiffres selon votre réalité terrain, votre maturité IA et vos processus existants.
+          </p>
+          <a href="https://www.neuroleads.fr/#contact" class="btn-primary inline-flex items-center gap-2 px-8 py-4 rounded-xl text-base font-medium text-white">
+            <span>Valider ce ROI avec un expert Neuroleads</span>
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Empty state -->
+      <div id="emptyState" class="text-center py-12">
+        <div class="w-16 h-16 rounded-2xl bg-accent/10 border border-accent/20 flex items-center justify-center mx-auto mb-4">
+          <svg class="w-8 h-8 text-accent-hover" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"/></svg>
+        </div>
+        <p class="text-slate-400">Sélectionnez un département pour commencer la simulation</p>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<footer class="relative z-10 border-t border-border-subtle/50 mt-16">
+  <div class="max-w-7xl mx-auto px-6 lg:px-8 py-8 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-slate-500">
+    <div>© 2026 Neuroleads — L'IA au service de la performance.</div>
+    <div class="flex gap-6">
+      <a href="https://www.neuroleads.fr" class="hover:text-accent-hover transition">Retour au site</a>
+      <a href="https://www.neuroleads.fr/#contact" class="hover:text-accent-hover transition">Nous contacter</a>
+    </div>
+  </div>
+</footer>
+
+<!-- ================= Chart.js ================= -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+<!-- ================= Simulator logic ================= -->
+<script>
+  // ===== Data: 46 cas d'usage IA répartis sur 10 départements =====
+  const USECASES = {
+    transverse: [
+      { id:'t1', name:'Assistant de recherche documentaire interne', desc:'Agent RAG qui interroge vos bases internes (SharePoint, Drive, Confluence) et répond en langage naturel.', type:'agent', hoursPerWeek:5, automation:0.7, complexity:2 },
+      { id:'t2', name:'Comptes-rendus de réunion automatisés', desc:'Transcription + synthèse structurée (décisions, actions, responsables) pour Teams, Zoom, Meet.', type:'auto', hoursPerWeek:4, automation:0.9, complexity:1 },
+      { id:'t3', name:'Rédaction et reformulation de communications', desc:'Assistant de rédaction : reformule, traduit, adapte le registre selon le destinataire.', type:'auto', hoursPerWeek:3, automation:0.75, complexity:1 },
+      { id:'t4', name:'Onboarding collaborateur automatisé', desc:'Agent qui orchestre le parcours d\'intégration : comptes, documents, formations, checklist.', type:'agent', hoursPerWeek:7, automation:0.8, complexity:3 },
+      { id:'t5', name:'Veille réglementaire et sectorielle', desc:'Surveille vos sources et envoie un digest hebdomadaire personnalisé par profil.', type:'auto', hoursPerWeek:3, automation:0.85, complexity:1 },
+      { id:'t6', name:'Gestion des notes de frais', desc:'Extraction des justificatifs, contrôle de conformité et pré-remplissage du workflow.', type:'agent', hoursPerWeek:3, automation:0.8, complexity:2 }
+    ],
+    commercial: [
+      { id:'c1', name:'Qualification et scoring des leads entrants', desc:'Enrichissement automatique et scoring prédictif des leads selon leur maturité d\'achat.', type:'agent', hoursPerWeek:6, automation:0.75, complexity:2 },
+      { id:'c2', name:'Préparation automatique des rendez-vous commerciaux', desc:'Brief complet avant chaque RDV : historique, actualité client, signaux d\'achat.', type:'agent', hoursPerWeek:5, automation:0.8, complexity:2 },
+      { id:'c3', name:'Rédaction de propositions commerciales personnalisées', desc:'Génération de propositions sur-mesure à partir de vos templates et d\'un brief.', type:'auto', hoursPerWeek:5, automation:0.7, complexity:1 },
+      { id:'c4', name:'Agent de suivi de pipeline et relances', desc:'Détecte les opportunités à relancer et déclenche des actions ciblées automatiquement.', type:'agent', hoursPerWeek:6, automation:0.8, complexity:3 },
+      { id:'c5', name:'Analyse des appels de vente (call scoring)', desc:'Scoring qualitatif des appels, détection des signaux et coaching commercial automatisé.', type:'auto', hoursPerWeek:4, automation:0.85, complexity:1 }
+    ],
+    marketing: [
+      { id:'m1', name:'Génération de contenus multi-canal', desc:'Décline un brief en contenus email, social, blog, ads adaptés à chaque format.', type:'auto', hoursPerWeek:8, automation:0.75, complexity:1 },
+      { id:'m2', name:'Agent de veille concurrentielle continue', desc:'Surveille les concurrents (contenus, pricing, campagnes) et alerte sur les signaux clés.', type:'agent', hoursPerWeek:5, automation:0.8, complexity:2 },
+      { id:'m3', name:'Personnalisation des campagnes email à grande échelle', desc:'Segmentation fine et variantes dynamiques générées par profil et comportement.', type:'auto', hoursPerWeek:4, automation:0.85, complexity:1 },
+      { id:'m4', name:'Analyse sémantique des avis clients et social', desc:'Clustering et analyse des sentiments sur avis, réseaux sociaux et verbatim.', type:'auto', hoursPerWeek:3, automation:0.85, complexity:2 },
+      { id:'m5', name:'Agent SEO — optimisation et production de contenus', desc:'Produit et optimise en continu articles et pages pour le trafic organique.', type:'agent', hoursPerWeek:5, automation:0.75, complexity:2 }
+    ],
+    finance: [
+      { id:'f1', name:'Extraction et réconciliation automatique des factures', desc:'OCR, extraction des données et rapprochement automatique factures / commandes.', type:'auto', hoursPerWeek:6, automation:0.85, complexity:2 },
+      { id:'f2', name:'Agent de clôture comptable assistée', desc:'Orchestration des tâches de clôture : rapprochements, écritures, contrôles automatisés.', type:'agent', hoursPerWeek:8, automation:0.7, complexity:3 },
+      { id:'f3', name:'Génération automatique du reporting financier', desc:'Production des rapports mensuels et tableaux de bord à partir du SI.', type:'auto', hoursPerWeek:4, automation:0.85, complexity:1 },
+      { id:'f4', name:'Détection d\'anomalies dans les notes de frais', desc:'Détection automatique des anomalies, doublons et non-conformités.', type:'auto', hoursPerWeek:3, automation:0.8, complexity:2 },
+      { id:'f5', name:'Agent d\'analyse et de prévision budgétaire', desc:'Analyse des écarts et prévisions glissantes par analyse des données historiques.', type:'agent', hoursPerWeek:6, automation:0.7, complexity:3 }
+    ],
+    rh: [
+      { id:'h1', name:'Tri et présélection automatique des CV', desc:'Scoring automatique des candidatures selon les critères du poste.', type:'auto', hoursPerWeek:5, automation:0.8, complexity:1 },
+      { id:'h2', name:'Chatbot RH pour les questions collaborateurs', desc:'Réponses automatisées aux questions RH récurrentes (congés, paie, procédures).', type:'agent', hoursPerWeek:4, automation:0.8, complexity:2 },
+      { id:'h3', name:'Rédaction de fiches de poste et d\'offres d\'emploi', desc:'Génération d\'annonces et de fiches de poste à partir d\'un brief simple.', type:'auto', hoursPerWeek:3, automation:0.8, complexity:1 },
+      { id:'h4', name:'Analyse des entretiens annuels et signaux RH', desc:'Analyse qualitative des entretiens et détection des signaux faibles.', type:'auto', hoursPerWeek:3, automation:0.8, complexity:2 },
+      { id:'h5', name:'Agent de gestion des plans de formation', desc:'Orchestration des plans de formation par profil et par collaborateur.', type:'agent', hoursPerWeek:5, automation:0.7, complexity:3 }
+    ],
+    juridique: [
+      { id:'j1', name:'Revue et analyse automatique de contrats', desc:'Identifie les clauses à risque, compare au modèle standard, propose des amendements.', type:'auto', hoursPerWeek:5, automation:0.75, complexity:2 },
+      { id:'j2', name:'Génération de contrats à partir de modèles types', desc:'Production automatisée de contrats personnalisés à partir des templates juridiques.', type:'auto', hoursPerWeek:3, automation:0.8, complexity:1 },
+      { id:'j3', name:'Agent de veille réglementaire et conformité', desc:'Surveille la réglementation, évalue les impacts métier et alerte les équipes.', type:'agent', hoursPerWeek:4, automation:0.75, complexity:3 },
+      { id:'j4', name:'Extraction d\'obligations contractuelles', desc:'Extraction et suivi automatique des obligations et échéances contractuelles.', type:'auto', hoursPerWeek:3, automation:0.8, complexity:2 }
+    ],
+    supply: [
+      { id:'sc1', name:'Analyse automatique des appels d\'offres fournisseurs', desc:'Analyse comparative, scoring et recommandation sur les offres reçues.', type:'auto', hoursPerWeek:5, automation:0.8, complexity:2 },
+      { id:'sc2', name:'Agent de suivi et relance des commandes fournisseurs', desc:'Suivi proactif et relances automatiques pour sécuriser les délais de livraison.', type:'agent', hoursPerWeek:5, automation:0.8, complexity:2 },
+      { id:'sc3', name:'Prévision de la demande par analyse historique', desc:'Prévisions de demande à partir des historiques, signaux externes et saisonnalité.', type:'auto', hoursPerWeek:4, automation:0.75, complexity:2 },
+      { id:'sc4', name:'Classification et enrichissement du référentiel articles', desc:'Classification et enrichissement automatique des données articles.', type:'auto', hoursPerWeek:3, automation:0.8, complexity:1 }
+    ],
+    it: [
+      { id:'i1', name:'Génération et revue de code assistées', desc:'Copilots de dev et revues automatiques avec détection de vulnérabilités.', type:'auto', hoursPerWeek:6, automation:0.75, complexity:2 },
+      { id:'i2', name:'Agent de résolution de tickets N1 et N2', desc:'Agent de support interne autonome basé sur votre base de connaissances.', type:'agent', hoursPerWeek:8, automation:0.8, complexity:3 },
+      { id:'i3', name:'Génération automatique de documentation technique', desc:'Documentation à partir du code, des specs et des schémas.', type:'auto', hoursPerWeek:4, automation:0.75, complexity:2 },
+      { id:'i4', name:'Agent de détection et réponse aux incidents de sécurité', desc:'Détection, triage et réponse automatisée aux alertes de sécurité.', type:'agent', hoursPerWeek:6, automation:0.75, complexity:3 }
+    ],
+    service: [
+      { id:'s1', name:'Agent de service client omnicanal', desc:'Agent unifié qui répond aux demandes sur tous les canaux (chat, email, voix).', type:'agent', hoursPerWeek:8, automation:0.8, complexity:2 },
+      { id:'s2', name:'Résumé et priorisation automatique des tickets', desc:'Classification, résumé et priorisation automatique des tickets entrants.', type:'auto', hoursPerWeek:4, automation:0.85, complexity:1 },
+      { id:'s3', name:'Génération automatique de réponses aux avis clients', desc:'Réponses personnalisées et tonales aux avis Google, Trustpilot, App Store.', type:'auto', hoursPerWeek:3, automation:0.8, complexity:2 },
+      { id:'s4', name:'Agent de gestion des réclamations et remboursements', desc:'Agent autonome pour traiter les réclamations simples et les remboursements.', type:'agent', hoursPerWeek:7, automation:0.75, complexity:3 }
+    ],
+    production: [
+      { id:'p1', name:'Contrôle qualité automatisé par vision IA', desc:'Détection automatique des défauts sur les lignes de production par vision par ordinateur.', type:'auto', hoursPerWeek:6, automation:0.85, complexity:2 },
+      { id:'p2', name:'Agent de maintenance prédictive', desc:'Prédiction des pannes et recommandations d\'intervention avant incident.', type:'agent', hoursPerWeek:6, automation:0.75, complexity:3 },
+      { id:'p3', name:'Optimisation automatique de la planification', desc:'Ordonnancement multi-critères optimisé par l\'IA sur vos contraintes.', type:'auto', hoursPerWeek:5, automation:0.75, complexity:2 },
+      { id:'p4', name:'Rapport de performance opérationnelle automatisé', desc:'Tableaux de bord et rapports automatisés sur la performance industrielle.', type:'auto', hoursPerWeek:3, automation:0.85, complexity:1 }
+    ]
+  };
+
+  const COMPLEXITY_MAP = {
+    1: { label: 'Quick Win',    duration: '4 à 8 semaines' },
+    2: { label: 'Standard',     duration: '2 à 4 mois' },
+    3: { label: 'Stratégique',  duration: '4 à 6 mois' }
+  };
+
+  let state = { department: null, selectedUsecases: new Set(), people: 10, rate: 45 };
+  let chart = null;
+
+  const deptCards = document.querySelectorAll('.dept-card');
+  const usecasesSection = document.getElementById('usecasesSection');
+  const usecasesList = document.getElementById('usecasesList');
+  const paramsSection = document.getElementById('paramsSection');
+  const resultsSection = document.getElementById('resultsSection');
+  const emptyState = document.getElementById('emptyState');
+
+  deptCards.forEach(card => {
+    card.addEventListener('click', () => {
+      deptCards.forEach(c => c.classList.remove('active'));
+      card.classList.add('active');
+      state.department = card.dataset.dept;
+      state.selectedUsecases.clear();
+      renderUsecases();
+      usecasesSection.classList.remove('hidden');
+      paramsSection.classList.add('hidden');
+      resultsSection.classList.add('hidden');
+      emptyState.classList.add('hidden');
+      usecasesSection.scrollIntoView({ behavior:'smooth', block:'nearest' });
+    });
+  });
+
+  function renderUsecases() {
+    const usecases = USECASES[state.department];
+    usecasesList.innerHTML = usecases.map(uc => {
+      const typeLabel = uc.type === 'agent' ? 'Agent IA' : 'Automatisation';
+      const typeColor = uc.type === 'agent'
+        ? 'bg-accent/10 text-accent-hover border-accent/30'
+        : 'bg-mint/10 text-mint border-mint/30';
+      const compInfo = { 1:{ label:'Quick Win', color:'text-mint' }, 2:{ label:'Standard', color:'text-accent-hover' }, 3:{ label:'Stratégique', color:'text-gold' } }[uc.complexity];
+      return `
+      <label class="usecase-item card-premium rounded-xl p-4 border border-border-subtle flex items-start gap-3">
+        <input type="checkbox" value="${uc.id}" class="usecase-check mt-1 w-5 h-5 rounded accent-accent cursor-pointer" />
+        <div class="flex-1 min-w-0">
+          <div class="flex flex-wrap items-center gap-2 mb-1.5">
+            <span class="text-[10px] font-semibold tracking-wide uppercase px-2 py-0.5 rounded-full border ${typeColor}">${typeLabel}</span>
+            <span class="text-[10px] font-medium uppercase tracking-wide ${compInfo.color}">${compInfo.label}</span>
+          </div>
+          <div class="font-medium text-white mb-1">${uc.name}</div>
+          <div class="text-xs text-slate-500 leading-relaxed">${uc.desc}</div>
+        </div>
+      </label>`;
+    }).join('');
+
+    document.querySelectorAll('.usecase-check').forEach(cb => {
+      cb.addEventListener('change', (e) => {
+        const item = e.target.closest('.usecase-item');
+        if (e.target.checked) { state.selectedUsecases.add(e.target.value); item.classList.add('selected'); }
+        else { state.selectedUsecases.delete(e.target.value); item.classList.remove('selected'); }
+
+        if (state.selectedUsecases.size > 0) {
+          paramsSection.classList.remove('hidden');
+          resultsSection.classList.remove('hidden');
+          updateResults();
+        } else {
+          paramsSection.classList.add('hidden');
+          resultsSection.classList.add('hidden');
+        }
+      });
+    });
+  }
+
+  const peopleRange = document.getElementById('peopleRange');
+  const rateRange = document.getElementById('rateRange');
+  const peopleValue = document.getElementById('peopleValue');
+  const rateValue = document.getElementById('rateValue');
+
+  peopleRange.addEventListener('input', (e) => { state.people = parseInt(e.target.value); peopleValue.textContent = state.people; updateResults(); });
+  rateRange.addEventListener('input',   (e) => { state.rate   = parseInt(e.target.value); rateValue.textContent   = state.rate;   updateResults(); });
+
+  function updateResults() {
+    if (!state.department || state.selectedUsecases.size === 0) return;
+    const usecases = USECASES[state.department].filter(uc => state.selectedUsecases.has(uc.id));
+
+    let totalHoursPerWeek = 0, totalComplexity = 0;
+    usecases.forEach(uc => { totalHoursPerWeek += uc.hoursPerWeek * uc.automation; totalComplexity += uc.complexity; });
+
+    const avgComplexity = Math.round(totalComplexity / usecases.length);
+    const totalWeeklyForTeam = totalHoursPerWeek * state.people;
+    const totalYearlyHours = totalWeeklyForTeam * 46;
+    const totalYearlyMoney = totalYearlyHours * state.rate;
+    const monthlyMoney = totalYearlyMoney / 12;
+
+    animateValue('hoursResult', totalYearlyHours);
+    animateValueMoney('moneyResult', totalYearlyMoney);
+    document.getElementById('hoursDetail').textContent = `${Math.round(totalWeeklyForTeam)} h/semaine pour l'équipe`;
+    document.getElementById('moneyDetail').textContent = `Soit ${formatMoney(monthlyMoney)} par mois`;
+
+    const comp = COMPLEXITY_MAP[avgComplexity] || COMPLEXITY_MAP[2];
+    document.getElementById('complexityResult').textContent = comp.label;
+    document.getElementById('complexityDetail').textContent = `Durée estimée : ${comp.duration}`;
+    const bars = document.getElementById('complexityBars').children;
+    for (let i = 0; i < 3; i++) {
+      bars[i].style.background = i < avgComplexity ? (avgComplexity === 1 ? '#14B8A6' : avgComplexity === 2 ? '#6366F1' : '#F59E0B') : '#151A3D';
+    }
+    updateChart(totalYearlyMoney);
+  }
+
+  function animateValue(id, target) {
+    const el = document.getElementById(id);
+    const start = parseInt(el.textContent.replace(/\D/g,'')) || 0;
+    const duration = 800, startTime = performance.now();
+    function update(now) {
+      const progress = Math.min((now - startTime)/duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const value = Math.round(start + (target - start) * eased);
+      el.textContent = value.toLocaleString('fr-FR');
+      if (progress < 1) requestAnimationFrame(update);
+    }
+    requestAnimationFrame(update);
+  }
+
+  function animateValueMoney(id, target) {
+    const el = document.getElementById(id);
+    const current = parseInt(el.textContent.replace(/\D/g,'')) || 0;
+    const duration = 900, startTime = performance.now();
+    function update(now) {
+      const progress = Math.min((now - startTime)/duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const value = Math.round(current + (target - current) * eased);
+      el.textContent = formatMoney(value);
+      if (progress < 1) requestAnimationFrame(update);
+    }
+    requestAnimationFrame(update);
+  }
+
+  function formatMoney(n) {
+    if (n >= 1000000) return (n/1000000).toFixed(1).replace('.', ',') + ' M€';
+    if (n >= 1000)    return Math.round(n/1000).toLocaleString('fr-FR') + ' k€';
+    return Math.round(n).toLocaleString('fr-FR') + ' €';
+  }
+
+  function updateChart(yearlyMoney) {
+    const ctx = document.getElementById('roiChart');
+    const data = {
+      labels: ['Année 1', 'Année 2', 'Année 3'],
+      datasets: [{
+        label: 'Gains cumulés (€)',
+        data: [yearlyMoney * 0.7, yearlyMoney * 1.7, yearlyMoney * 2.8],
+        borderColor: '#6366F1',
+        backgroundColor: (context) => {
+          const bgChart = context.chart, { ctx:c, chartArea } = bgChart;
+          if (!chartArea) return 'rgba(99,102,241,0.1)';
+          const gradient = c.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+          gradient.addColorStop(0, 'rgba(99,102,241,0.4)');
+          gradient.addColorStop(1, 'rgba(99,102,241,0)');
+          return gradient;
+        },
+        borderWidth: 3, tension: 0.4, fill: true,
+        pointBackgroundColor:'#818CF8', pointBorderColor:'#F8FAFC',
+        pointBorderWidth: 2, pointRadius: 6, pointHoverRadius: 8
+      }]
+    };
+    if (chart) { chart.data = data; chart.update(); return; }
+    chart = new Chart(ctx, {
+      type: 'line', data,
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor:'#151A3D', borderColor:'#6366F1', borderWidth: 1, padding: 12,
+            titleColor:'#F8FAFC', bodyColor:'#C7D2FE',
+            callbacks: { label: (ctx) => formatMoney(ctx.parsed.y) + ' cumulés' }
+          }
+        },
+        scales: {
+          x: { grid: { color:'rgba(255,255,255,0.04)' }, ticks: { color:'#64748B' } },
+          y: { grid: { color:'rgba(255,255,255,0.04)' }, ticks: { color:'#64748B', callback: (v) => formatMoney(v) } }
+        }
+      }
+    });
+  }
+
+  // ===== Reveal on scroll =====
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // ===== Iframe auto-resize (postMessage) =====
+  function sendHeight() {
+    if (window.parent === window) return;
+    const h = document.documentElement.scrollHeight;
+    window.parent.postMessage({ type:'neuroleads-simulator-height', height: h }, '*');
+  }
+  const ro = new ResizeObserver(sendHeight);
+  ro.observe(document.body);
+  window.addEventListener('load', sendHeight);
+</script>
+
+</body>
+</html>
